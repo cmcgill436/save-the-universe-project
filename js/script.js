@@ -81,23 +81,23 @@ function Start() {
   if (offer === "yes") {
     alert("Great! Lets kick some alien butt!!");
   } else {
-    alert("This may be the end of humanity as we know it..... ");
+    alert("This may be the end of humanity as we know it.....");
   }
 }
 Start(); //***REMEMBER TO INVOKE THE FUNCTIONS!!**
 
-class UssAssembly {
-  constructor(hull, firePower, accuracy) {
-    this.hull = 20;
-    this.firePower = 5;
-    this.accuracy = 0.7;
-  }
-  attack(alienShip) {
-    if (Math.random() < alien[0].accuracy) {
-      console.log("You have been hit!");
-    }
-  }
-}
+//factory for all of the ships
+const shipFactory = (hull, firePower, accuracy) => {
+  return {
+    hull: hull,
+    firePower: firePower,
+    accuracy: accuracy,
+  };
+};
+
+const ussAssembly = shipFactory(20, 5, 0.7);
+
+let alienShip = shipFactory();
 
 // // class alien {
 // //   constructor(hull, firepower, accuracy) {
