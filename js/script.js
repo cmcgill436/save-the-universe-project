@@ -120,83 +120,192 @@ class Ship {
     this.firePower = firePower;
     this.accuracy = accuracy;
   }
-  attack(alien) {
-    if (this.hull >= 0) {
-      if (alien.name === alienShip[0].name)
-        if (Math.floor(Math.random() * 3 + 0.6) / 10 <= this.accuracy) {
-          alert("You hit their ship!");
-          console.log(alien.hull - this.firePower);
-        } else if (Math.floor(Math.random() * 3 + 0.6) / 10 > this.accuracy) {
-          alert("You missed");
+}
+function start() {
+  const shipArr = [];
+  for (let i = 0; i < 6; i++) {
+    let name = "Ship #" + i;
+    let hull = Math.floor(Math.random() * 4) + 3;
+    let firePower = Math.floor(Math.random() * 3) + 2;
+    let accuracy = (Math.floor(Math.random() * 3) + 6) / 10;
+    let shipAlien = new Ship(name, hull, firePower, accuracy);
+    shipArr.push(shipAlien);
+  }
+  // console.log(shipArr);
+
+  const Captain = new Ship("USS Assembly", 20, 5, 0.7);
+
+  // console.log(Captain);
+
+  function alienAttack(currAlien, userShip) {
+    if (currAlien.accuracy >= Math.random()) {
+      userShip.hull -= currAlien.firePower;
+      if (userShip.hull <= 0) {
+        console.log("You Lose!");
+        return userShip.hull;
+      } else {
+        console.log("Their turn!");
+        return userShip.hull;
+      }
+    } else {
+      console.log("It's their turn");
+      return userShip.hull;
+    }
+  }
+
+  function userAttack(currAlien, userShip) {
+    if (userShip.accuracy >= Math.random()) {
+      currAlien.hull -= userShip.firePower;
+      if (currAlien.hull <= 0) {
+        console.log("You did it! Thier ship is destroyed");
+        return currAlien.hull;
+      } else {
+        console.log("Your turn!");
+        return currAlien.hull;
+      }
+    } else {
+      console.log("It's your turn");
+      return currAlien.hull;
+    }
+  }
+  let userTurn = true;
+  let currAlienIndex = 0;
+  while (currAlienIndex < shipArr.length)
+    if (userTurn) {
+      let alienHull = userAttack(shipArr[currAlienIndex], Captain);
+      if (alienHull <= 0) {
+        console.log("Alienship Destroyed #" + currAlienIndex);
+        if (currAlienIndex >= shipArr.length - 1) {
+          console.log("You Win!");
+          break;
         }
-    }
-  }
-  retreat() {
-    if (input === R) {
-      gameOver; //create code to similate the game ending/restart
-      alert("This may be the end of humanity as we know it.....");
-      // UssAssmbly loses
+        let retreat = prompt("Do you want to attack or retreat");
+        if (retreat === "retreat") {
+          console.log("Game Over");
+          break;
+        }
+        currAlienIndex++;
+        userTurn = false;
+      } else {
+        userTurn = false;
+      }
     } else {
-      UssAssembly.attack;
+      let userHull = alienAttack(shipArr[currAlienIndex], Captain);
+      if (userHull <= 0) {
+        console.log("You lose!");
+        break;
+      } else {
+        userTurn = true;
+      }
     }
-  }
 }
-// let alienAcc = Math.floor(Math.random() * 3 + 0.6) / 10;
-// if (Math.random() < alien[0].accuracy) {
-// 	console.log('You have been hit!');
+start();
+//   attack(alien) {
+//     if (this.hull >= 0) {
+//       if (alien.name === alienShip[0].name)
+//         if (Math.floor(Math.random() * 3 + 0.6) / 10 <= this.accuracy) {
+//           alert("You hit their ship!");
+//           console.log(alien.hull - this.firePower);
+//         } else if (Math.floor(Math.random() * 3 + 0.6) / 10 > this.accuracy) {
+//           alert("You missed");
+//         }
+//     }
+//   }
 // }
-let Captain = new Ship("USS Assembly", 20, 5, 0.7);
-console.log(Captain);
+// // let alienAcc = Math.floor(Math.random() * 3 + 0.6) / 10;
+// // if (Math.random() < alien[0].accuracy) {
+// // 	console.log('You have been hit!');
+// // }
+// const Captain = new Ship("USS Assembly", 1, 20, 5, 0.7);
+// // console.log(Captain);
 
-//ALIEN SHIP
-// let AlienShip = ShipFactory("Aliens");
+// //ALIEN SHIP
+// class AlienFactory {
+//   constructor(hull, firePower, accuracy) {
+//     // (this.name = name),
+//     (this.hull = hull),
+//       (this.firePower = firePower),
+//       (this.accuracy = accuracy);
+//     // (this.ships = []);
+//   }
+//   attack(Captain) {
+//     if (this.accuracy >= Captain.accuracy) {
+//       console.log((Captian.hull -= this.firepower));
+//       alert("You hit their ship!");
+//     } else {
+//       alert("You missed");
+//       return false;
+//     }
+//   }
+//   generateShip(hull, firePower, accuracy) {
+//     const newShip = new Ship(
+//       // this.name,
+//       // this.ships.length,
+//       (this.hull = hull),
+//       (this.firePower = firePower),
+//       (this.accuracy = accuracy)
+//     );
+//     // this.ships.push(newShip);
+//   }
+//   selectShip(index) {
+//     return this.ships[index];
+//   }
+// }
+// const alien = new AlienFactory();
+// const shipArr = [];
+// for (let i = 0; i < 6; i++) {
+//   let hull = Math.floor(Math.random() * 4) + 3;
+//   let firePower = Math.floor(Math.random() * 3) + 2;
+//   let accuracy = (Math.floor(Math.random() * 3) + 6) / 10;
+//   let shipAlien = alien.generateShip(hull, firePower, accuracy);
+//   shipArr.push(shipAlien);
+// }
+// console.log(shipArr);
 
-class Alien extends Ship {
-  constructor(hull, firepower, accuracy) {
-    super((this.ships = []));
-    this.hull = Math.floor(Math.random() * 4) + 3; //range 3-6
-    this.firePower = Math.floor(Math.random() * 3) + 2; //range 2-4
-    this.accuracy = Math.floor(Math.random() * 3 + 0.6) / 10;
-  }
-  attack() {
-    if (this.accuracy >= UssAssembly.accuracy) {
-      alert("You hit their ship!");
-      return true;
-    } else {
-      alert("You missed");
-      return false;
-    }
-  }
-}
+// // const alien = new AlienFactory("Alien");
+// // alien.generateShip();
+// // alien.generateShip();
+// // alien.generateShip();
+// // alien.generateShip();
+// // alien.generateShip();
+// // alien.generateShip();
+// // console.log(alien);
 
-function mission() {
-  alert(
-    "Captain, we are under attack! A fleet of alien ships are invading Earth!"
-  );
+// // function mission() {
+// //   alert(
+// //     "Captain, we are under attack! A fleet of alien ships are invading Earth!"
+// //   );
 
-  alert(
-    "You are our best chance at survival. We need you to lead us in battle!"
-  );
-  let offer = prompt("Are you willing to help? (type yes or no)");
-  if (offer === "yes") {
-    alert("Great! Lets kick some alien butt!!");
-    retreat();
-  } else if (offer === "no") {
-    alert("This may be the end of humanity as we know it.....");
-    UssAssembly.retreat();
-  }
-}
-mission();
+// //   alert(
+// //     "You are our best chance at survival. We need you to lead us in battle!"
+// //   );
+// //   let offer = prompt("Are you willing to help? \r \r (type yes or no)");
+// //   if (offer === "yes") {
+// //     alert("Great! Lets kick some alien butt!!");
+// //     retreat();
+// //   } else if (offer === "no") {
+// //     alert("This may be the end of humanity as we know it..... \r Game over ");
+// //     // UssAssembly.retreat();
+// //     //confirm()
+// //   }
+// // }
+// // mission();
 
-function retreat() {
-  alert(
-    "Alright Captain, the USS Assembly is ready for battle! Are you ready to attack or would you like to retreat?"
-  );
-  let response = prompt("Type A for Attack or R for retreat");
-  if (response === "r" || "R") {
-    UssAssembly.retreat();
-  } else if (response === "a" || "A") {
-    UssAssembly.attack();
-  }
-}
-// document.addEventListener("click", attack);
+// // function retreat() {
+// //   let response = confirm(
+// //     "Alright Captain, the USS Assembly is ready for battle! \r Are you ready to attack or would you like to retreat? \r Click ok to continue and open your console. Click cancel to retreat"
+// //   );
+// // }
+
+// // const play = (Captain, alien) => {
+// //   let isAlive = this.hull > 0;
+// //   while (Captain.isAlive && alien[i].isAlive) {
+// //     Captain.attack(alien);
+// //     if (alien.isAlive) {
+// //       alien.attack(Captain);
+// //     }
+// //   }
+// // };
+
+// // console.log(play);
+// // // document.addEventListener("click", attack);
